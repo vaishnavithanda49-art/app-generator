@@ -17,7 +17,7 @@ async function callAI(prompt) {
   const response = await axios.post(
     'https://openrouter.ai/api/v1/chat/completions',
     {
-      model: 'meta-llama/llama-3.3-70b-instruct:free',
+      model: 'deepseek/deepseek-r1-0528:free',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.1
     },
