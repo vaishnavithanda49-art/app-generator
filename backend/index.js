@@ -18,21 +18,27 @@ async function callAI(prompt) {
     'https://openrouter.ai/api/v1/chat/completions',
     {
       model: 'meta-llama/llama-3.3-70b-instruct:free',
-      messages: [{ role: 'user', content: prompt }]
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.1
     },
     {
       headers: {
         'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
         'Content-Type': 'application/json'
-      }
+      },
+      timeout: 60000
     }
   );
   
   const text = response.data.choices[0].message.content;
+  // Find JSON in the response
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (jsonMatch) {
+    return jsonMatch[0];
+  }
   const cleaned = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
   return cleaned;
 }
-
 // STAGE 1: Extract Intent
 async function extractIntent(userInput) {
   const prompt = `
