@@ -5,7 +5,7 @@ const axios = require('axios');
 
 const app = express();
 app.use(cors({
-  origin: 'https://frontend-flame-nu-36.vercel.app',
+  origin: '*',
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type']
 }));
