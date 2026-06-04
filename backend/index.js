@@ -180,7 +180,55 @@ app.post('/generate', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+// STAGE 5: Generate Code
+app.post('/generate-code', async (req, res) => {
+  const { schema } = req.body;
 
+  if (!schema) {
+    return res.status(400).json({ error: 'Please provide schema' });
+  }
+
+  try {
+    console.log('Generating code from schema...');
+
+    // Generate SQL
+    const sqlPrompt = `
+      Based on this database schema, generate SQL CREATE TABLE statements.
+      Schema: ${JSON.stringify(schema.database)}
+      Respond ONLY with SQL code, no extra text.
+    `;
+    const sqlCode = await callAI(sqlPrompt);
+
+    // Generate Express backend code
+    const backendPrompt = `
+      Based on these API endpoints, generate a basic Express.js server code.
+      Endpoints: ${JSON.stringify(schema.api)}
+      Respond ONLY with JavaScript code, no extra text.
+    `;
+    const backendCode = await callAI(backendPrompt);
+
+    // Generate React frontend code
+    const frontendPrompt = `
+      Based on these UI pages, generate basic React components code.
+      Pages: ${JSON.stringify(schema.ui)}
+      Respond ONLY with React JSX code, no extra text.
+    `;
+    const frontendCode = await callAI(frontendPrompt);
+
+    res.json({
+      success: true,
+      code: {
+        sql: sqlCode,
+        backend: backendCode,
+        frontend: frontendCode
+      }
+    });
+
+  } catch (error) {
+    console.error('Error:', error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
 app.get('/', (req, res) => {
   res.json({ message: 'App Generator API is running!' });
 });
