@@ -17,7 +17,7 @@ async function callAI(prompt) {
   const response = await axios.post(
     'https://openrouter.ai/api/v1/chat/completions',
     {
-      model: 'poolside/laguna-m.1:free',
+      model: 'nvidia/nemotron-3-nano-30b-a3b:free',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.1
     },
